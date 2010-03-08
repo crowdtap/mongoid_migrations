@@ -19,9 +19,16 @@ module GeneratorHelpers
   def generate_rails_app
     FileUtils.mkdir(File.join(@app_root))
   end    
- 
-  def generate_migration()
-    Rails::Generator::Scripts::Generate.new.run(['mongoid_migration','test_migration'], :destination => @app_root, :backtrace => true)
+
+  def generate_migration(name)
+    # old_stdout = $STDOUT
+    orig_std_out = STDOUT.clone
+    STDOUT.reopen(File.open('OUTPUT', 'w+'))
+
+    Rails::Generator::Scripts::Generate.new.run(['mongoid_migration',name], :destination => @app_root, :quiet => true)
+  ensure
+    STDOUT.reopen(orig_std_out)
+    @std_output = File.read('OUTPUT')
   end
  
 end
