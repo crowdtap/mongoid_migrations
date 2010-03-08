@@ -8,31 +8,21 @@ Gem::Specification.new do |s|
   s.description = "Mongoid Migrations in Rails"
   s.has_rdoc = false
   s.authors  = ["Galin Yordanov"]
-  s.files    = ["features",
+  s.files    = [
    "features/generate_migration.feature",
-   "features/step_definitions",
    "features/step_definitions/generate_migration.rb",
-   "features/support",
    "features/support/env.rb",
-   "generators",
-   "generators/mongoid_migration",
+   "features/use_migrations.feature",
    "generators/mongoid_migration/mongoid_migration_generator.rb",
    "generators/mongoid_migration/templates",
    "generators/mongoid_migration/templates/migration.rb",
    "generators/mongoid_migration/USAGE",
    "init.rb",
-   "lib",
-   "lib/mongoid",
    "lib/mongoid/migration.rb",
    "lib/mongoid/migrator.rb",
    "lib/mongoid_migration.rb",
    "mongoid_migrations.gemspec",
    "Rakefile",
-   "tasks",
-   "tasks/mongoid_migration_tasks.rake",
-   "test",
-   "test/generators_test.rb",
-   "test/migrator_test.rb",
-   "test/test_helper.rb"]
+   "tasks/mongoid_migration_tasks.rake"]
   s.require_paths = ["lib"]
 end
