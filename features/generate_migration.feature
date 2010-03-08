@@ -1,6 +1,7 @@
 Feature: Migration Generation
   In order to create a great application
   I should be able to generate a new migration file
+
   Background:
     Given I have a new rails app
 
