@@ -1,14 +1,10 @@
-require 'rake'
-require 'rake/testtask'
-require 'rake/rdoctask'
+require 'rubygems'
+require 'cucumber'
+require 'cucumber/rake/task'
 
-desc 'Default: run unit tests.'
-task :default => :test
+desc 'Default: run features.'
+task :default => :features
 
-desc 'Test the mongoid migration plugin.'
-Rake::TestTask.new(:test) do |t|
-  t.libs << 'lib'
-  t.libs << 'test'
-  t.pattern = 'test/**/*_test.rb'
-  t.verbose = true
+Cucumber::Rake::Task.new(:features) do |t|
+  t.cucumber_opts = "features --format pretty"
 end

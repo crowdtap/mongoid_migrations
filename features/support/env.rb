@@ -3,9 +3,6 @@ require "rubygems"
 require 'active_support'
 require 'rails_generator'
 require 'rails_generator/scripts/generate'
-
-require "rails_generator"
-require 'rails_generator/scripts/generate'
 require "fileutils"
 require "mongoid_migration/mongoid_migration_generator"
  
