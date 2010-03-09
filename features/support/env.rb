@@ -1,11 +1,15 @@
 $:.unshift(File.dirname(__FILE__) + "/../../generators")
 require "rubygems"
+require 'spec/expectations'
+require 'spec/mocks'
 require 'active_support'
 require 'rails_generator'
 require 'rails_generator/scripts/generate'
 require "fileutils"
+require 'mongoid'
 require "mongoid_migration/mongoid_migration_generator"
- 
+require "init"
+
 app_root  = File.join(File.dirname(__FILE__), "/../../")
 tmp_rails_app_name  = "tmp_rails_app"
 tmp_rails_app_root  = File.join(app_root, tmp_rails_app_name)
