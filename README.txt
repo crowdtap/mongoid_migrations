@@ -4,18 +4,19 @@ Galin Yordanov <gyordanov@gmail.com>
 Verion 0.1 08 March, 2010
 
 install as a plugin:
-./script/plugin install git@github.com:crowdtap/mongoid_migrations.git
+  ./script/plugin install git@github.com:crowdtap/mongoid_migrations.git
 or git submodule:
-git submodule add git@github.com:crowdtap/mongoid_migrations.git vendor/plugins/mongoid_migrations
+  git submodule add git@github.com:crowdtap/mongoid_migrations.git vendor/plugins/mongoid_migrations
 
-The plugins includes a migration generator and couple rake task.
+The plugins includes migration generator and couple rake tasks.
 
 == Migration Generator
 Run
   ./script/generate mongoid_migration
 for usage info.
+
 It will create new directory db/mongoid_migrate, and new migration files.
-It follows the same formula as the regular ActiveRecord migration:
+The plugin more or less follows the same formula as the regular ActiveRecord migration:
 up and down methods that get executed on their respective up/down migrations.
 
 == Rake Tasks
