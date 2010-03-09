@@ -25,4 +25,5 @@ Gem::Specification.new do |s|
    "Rakefile",
    "tasks/mongoid_migration_tasks.rake"]
   s.require_paths = ["lib"]
+  s.add_dependency('mongoid')
 end
