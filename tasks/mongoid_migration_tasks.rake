@@ -61,6 +61,6 @@ namespace :mongoid do
   end
 
   desc 'Migrate the database and initialize with the seed data'
-  task :setup => [ 'mongoid:migrate', 'mongoid:seed' ]
+  task :setup => [ 'mongoid:migrate', 'db:seed' ]
 
 end
