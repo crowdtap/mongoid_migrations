@@ -74,12 +74,11 @@ module Mongoid
       start = up? ? 0 : (migrations.index(current) || 0)
       finish = migrations.index(target) || migrations.size - 1
       runnable = migrations[start..finish]
-
       # skip the last migration if we're headed down, but not ALL the way down
       runnable.pop if down? && !target.nil?
 
       runnable.each do |migration|
-        Base.logger.info "Migrating to #{migration.name} (#{migration.version})"
+        Rails.logger.info "Migrating to #{migration.name} (#{migration.version})"
 
         # On our way up, we skip migrating the ones we've already migrated
         next if up? && migrated.include?(migration.version.to_i)
@@ -91,10 +90,8 @@ module Mongoid
         end
 
         begin
-          ddl_transaction do
-            migration.migrate(@direction)
-            record_version_state_after_migrating(migration.version)
-          end
+          migration.migrate(@direction)
+          record_version_state_after_migrating(migration.version)
         rescue => e
           raise StandardError, "An error has occurred, all later migrations canceled:\n\n#{e}", e.backtrace
         end
