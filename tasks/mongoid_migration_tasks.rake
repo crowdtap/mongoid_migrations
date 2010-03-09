@@ -1,10 +1,10 @@
 namespace :mongoid do
   task :load_config => :rails_env
 
-  desc "Migrate the database through scripts in db/migrate. Target specific version with VERSION=x. Turn off output with VERBOSE=false."
+  desc "Migrate the database through scripts in db/mongoid_migrate. Target specific version with VERSION=x. Turn off output with VERBOSE=false."
   task :migrate => :environment do
     Mongoid::Migration.verbose = ENV["VERBOSE"] ? ENV["VERBOSE"] == "true" : true
-    Mongoid::Migrator.migrate("db/migrate/", ENV["VERSION"] ? ENV["VERSION"].to_i : nil)
+    Mongoid::Migrator.migrate("db/mongoid_migrate/", ENV["VERSION"] ? ENV["VERSION"].to_i : nil)
   end
 
   namespace :migrate do
@@ -23,21 +23,21 @@ namespace :mongoid do
     task :up => :environment do
       version = ENV["VERSION"] ? ENV["VERSION"].to_i : nil
       raise "VERSION is required" unless version
-      Mongoid::Migrator.run(:up, "db/migrate/", version)
+      Mongoid::Migrator.run(:up, "db/mongoid_migrate/", version)
     end
 
     desc 'Runs the "down" for a given migration VERSION.'
     task :down => :environment do
       version = ENV["VERSION"] ? ENV["VERSION"].to_i : nil
       raise "VERSION is required" unless version
-      Mongoid::Migrator.run(:down, "db/migrate/", version)
+      Mongoid::Migrator.run(:down, "db/mongoid_migrate/", version)
     end
   end
 
   desc 'Rolls the schema back to the previous version. Specify the number of steps with STEP=n'
   task :rollback => :environment do
     step = ENV['STEP'] ? ENV['STEP'].to_i : 1
-    Mongoid::Migrator.rollback('db/migrate/', step)
+    Mongoid::Migrator.rollback('db/mongoid_migrate/', step)
   end
 
   desc "Retrieves the current schema version number"
@@ -48,7 +48,7 @@ namespace :mongoid do
   desc "Raises an error if there are pending migrations"
   task :abort_if_pending_migrations => :environment do
     if defined? Mongoid
-      pending_migrations = Mongoid::Migrator.new(:up, 'db/migrate').pending_migrations
+      pending_migrations = Mongoid::Migrator.new(:up, 'db/mongoid_migrate').pending_migrations
 
       if pending_migrations.any?
         puts "You have #{pending_migrations.size} pending migrations:"
