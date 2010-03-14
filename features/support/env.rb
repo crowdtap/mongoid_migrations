@@ -21,25 +21,39 @@ module GeneratorHelpers
     FileUtils.mkdir(File.join(@app_root))
   end    
 
-  def generate_migration(name)
-    # old_stdout = $STDOUT
+  def capture_output(&block)
     orig_std_out = STDOUT.clone
     STDOUT.reopen(File.open('OUTPUT', 'w+'))
-
-    Rails::Generator::Scripts::Generate.new.run(['mongoid_migration',name], :destination => @app_root, :quiet => true)
+    yield
   ensure
     STDOUT.reopen(orig_std_out)
     @std_output = File.read('OUTPUT')
+  end
+
+  def generate_migration(name)
+    capture_output{
+      Rails::Generator::Scripts::Generate.new.run(
+            ['mongoid_migration',name],
+            :destination => @app_root, :quiet => true
+      )
+    }
   end
  
 end
  
 Before do
   @app_root = tmp_rails_app_root
+  Mongoid.configure do |config|
+    name = 'mongoid_migrations_test_database'
+    host = 'localhost'
+    config.master = Mongo::Connection.new.db(name)
+  end
+  Mongoid.database.collections.each {|c| c.drop}
 end
  
 After do
   FileUtils.rm_rf(tmp_rails_app_root)
+  Mongoid.database.collections.each {|c| c.drop}
 end
  
 World(GeneratorHelpers)
