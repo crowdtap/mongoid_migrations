@@ -3,7 +3,7 @@ Then /^I should see a message that the migration already exists$/ do
 end
 
 Then /^I should see the usage help$/ do
-  @terminal.output.should include "./script/generate mongoid_migration MigrationName [options]"
+  @terminal.output.should include "script/generate mongo_migration MigrationName [options]"
 end
 
 Then /^the migration should have proper content$/ do

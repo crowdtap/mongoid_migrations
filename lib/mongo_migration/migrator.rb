@@ -1,4 +1,4 @@
-module Mongoid
+module Mongo
   class Migrator#:nodoc:
     class << self
       def migrate(migrations_path, target_version = nil)
@@ -137,23 +137,23 @@ module Mongoid
 
     private
 
-      def record_version_state_after_migrating(version)
-        @migrated_versions ||= []
-        if down?
-          @migrated_versions.delete(version.to_i)
-          Mongoid.database["migrations"].remove({:version => version.to_i})
-        else
-          @migrated_versions.push(version.to_i).sort!
-          Mongoid.database["migrations"].insert({:version => version.to_i})
-        end
+    def record_version_state_after_migrating(version)
+      @migrated_versions ||= []
+      if down?
+        @migrated_versions.delete(version.to_i)
+        Mongo::Connection.new.db("migrations").remove({:version => version.to_i})
+      else
+        @migrated_versions.push(version.to_i).sort!
+        Mongo::Connection.new.db("migrations").insert({:version => version.to_i})
       end
+    end
 
-      def up?
-        @direction == :up
-      end
+    def up?
+      @direction == :up
+    end
 
-      def down?
-        @direction == :down
-      end
+    def down?
+      @direction == :down
+    end
   end
 end

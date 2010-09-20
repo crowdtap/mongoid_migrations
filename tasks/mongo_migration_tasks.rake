@@ -1,21 +1,21 @@
-namespace :mongoid do
+namespace :mongo do
   task :load_config => :rails_env
 
-  desc "Migrate the database through scripts in db/mongoid_migrate. Target specific version with VERSION=x. Turn off output with VERBOSE=false."
+  desc "Migrate the database through scripts in db/mongo_migrate. Target specific version with VERSION=x. Turn off output with VERBOSE=false."
   task :migrate => :environment do
-    Mongoid::Migration.verbose = ENV["VERBOSE"] ? ENV["VERBOSE"] == "true" : true
-    Mongoid::Migrator.migrate("db/mongoid_migrate/", ENV["VERSION"] ? ENV["VERSION"].to_i : nil)
+    Mongo::Migration.verbose = ENV["VERBOSE"] ? ENV["VERBOSE"] == "true" : true
+    Mongo::Migrator.migrate("db/mongo_migrate/", ENV["VERSION"] ? ENV["VERSION"].to_i : nil)
   end
 
   namespace :migrate do
     desc  'Rollbacks the database one migration and re migrate up. If you want to rollback more than one step, define STEP=x. Target specific version with VERSION=x.'
     task :redo => :environment do
       if ENV["VERSION"]
-        Rake::Task["mongoid:migrate:down"].invoke
-        Rake::Task["mongoid:migrate:up"].invoke
+        Rake::Task["mongo:migrate:down"].invoke
+        Rake::Task["mongo:migrate:up"].invoke
       else
-        Rake::Task["mongoid:rollback"].invoke
-        Rake::Task["mongoid:migrate"].invoke
+        Rake::Task["mongo:rollback"].invoke
+        Rake::Task["mongo:migrate"].invoke
       end
     end
 
@@ -23,44 +23,43 @@ namespace :mongoid do
     task :up => :environment do
       version = ENV["VERSION"] ? ENV["VERSION"].to_i : nil
       raise "VERSION is required" unless version
-      Mongoid::Migrator.run(:up, "db/mongoid_migrate/", version)
+      Mongo::Migrator.run(:up, "db/mongo_migrate/", version)
     end
 
     desc 'Runs the "down" for a given migration VERSION.'
     task :down => :environment do
       version = ENV["VERSION"] ? ENV["VERSION"].to_i : nil
       raise "VERSION is required" unless version
-      Mongoid::Migrator.run(:down, "db/mongoid_migrate/", version)
+      Mongo::Migrator.run(:down, "db/mongo_migrate/", version)
     end
   end
 
   desc 'Rolls the schema back to the previous version. Specify the number of steps with STEP=n'
   task :rollback => :environment do
     step = ENV['STEP'] ? ENV['STEP'].to_i : 1
-    Mongoid::Migrator.rollback('db/mongoid_migrate/', step)
+    Mongo::Migrator.rollback('db/mongo_migrate/', step)
   end
 
   desc "Retrieves the current schema version number"
   task :version => :environment do
-    puts "Current version: #{Mongoid::Migrator.current_version}"
+    puts "Current version: #{Mongo::Migrator.current_version}"
   end
 
   desc "Raises an error if there are pending migrations"
   task :abort_if_pending_migrations => :environment do
-    if defined? Mongoid
-      pending_migrations = Mongoid::Migrator.new(:up, 'db/mongoid_migrate').pending_migrations
+    if defined? Mongo
+      pending_migrations = Mongo::Migrator.new(:up, 'db/mongo_migrate').pending_migrations
 
       if pending_migrations.any?
         puts "You have #{pending_migrations.size} pending migrations:"
         pending_migrations.each do |pending_migration|
           puts '  %4d %s' % [pending_migration.version, pending_migration.name]
         end
-        abort %{Run "rake mongoid:migrate" to update your database then try again.}
+        abort %{Run "rake mongo:migrate" to update your database then try again.}
       end
     end
   end
 
   desc 'Migrate the database and initialize with the seed data'
-  task :setup => [ 'mongoid:migrate', 'db:seed' ]
-
+  task :setup => [ 'mongo:migrate', 'db:seed' ]
 end

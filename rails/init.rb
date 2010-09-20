@@ -1,1 +1,1 @@
-require 'mongoid_migration'
+require 'mongo_migration'

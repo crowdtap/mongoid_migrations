@@ -1,33 +1,34 @@
-When /^I generate a Rails application$/ do
-  @terminal.cd   TEMP_DIR
-  @terminal.run 'rails rails_root'
-
-  if rails_root_exists?
-    @terminal.echo("Generated a Rails 2.3.5 application")
-  else
-    raise "Unable to generate a Rails application:\n#{@terminal.output}"
-  end
-end
-
 Given /^I generate a Rails application with mongo migrations$/ do
   steps %{
     When I generate a Rails application
-    And I generate a Gemfile with mongo migrations
+    And I setup my Rails 2.3 app with Bundler
+    And I generate a Gemfile with mongo migration gem
     And I run "bundle install"
     And cleanup Mongo
   }
+end
+
+When /^I generate a Rails application$/ do
+  @terminal.cd   TEMP_DIR
+  @terminal.run 'rails rails_root'
+end
+
+When /^I generate a Gemfile with mongo migration gem$/ do
+  @terminal.cd RAILS_ROOT
+  FileUtils.cp File.join(PROJECT_ROOT, 'features', 'support', 'fixtures', 'Gemfile'), RAILS_ROOT
+end
+
+When /^I setup my Rails 2.3 app with Bundler$/ do
+  require_bundler_in_boot_rb
+  create_preinitializer
 end
 
 And /^cleanup Mongo$/ do
   drop_collections
 end
 
-When /^I generate a Gemfile with mongo migrations$/ do
-  FileUtils.cp File.join(PROJECT_ROOT, 'features', 'support', 'fixtures', 'Gemfile'), RAILS_ROOT
-end
-
 When /^I run the mongo migration generator with "([^\"]*)"$/ do |generator_args|
-  When %{I run "script/generate mongoid_migration #{generator_args}"}
+  When %{I run "bundle exec script/generate mongo_migration #{generator_args}"}
 end
 
 When /^I run "([^\"]*)"$/ do |command|

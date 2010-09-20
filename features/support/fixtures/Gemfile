@@ -4,4 +4,4 @@ gem 'bson',     '1.0.4'
 gem 'bson_ext', '1.0.4'
 gem 'mongo',    '1.0.6'
 gem 'mongoid',  '1.9.1'
-gem 'mongo_migrations', :path => File.join('..')
+gem 'mongo_migration', :path => File.join('..', '..')

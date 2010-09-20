@@ -1,7 +1,7 @@
 module MongoHelpers
   def drop_collections
     connection = Mongo::Connection.new
-    db = connection.db("mongoid_migrations_test_database")
+    db = connection.db("mongo_migration_db")
 
     db.collection_names.each do |collection|
       db.drop_collection(collection)
@@ -9,7 +9,7 @@ module MongoHelpers
   end
 
   def first_migration
-    Dir[File.join(RAILS_ROOT, 'db', 'mongoid_migrate', '*')].first
+    Dir[File.join(RAILS_ROOT, 'db', 'mongo_migrate', '*')].first
   end
 end
 

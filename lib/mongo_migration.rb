@@ -1,28 +1,30 @@
-module Mongoid
-  class MongoidError < StandardError; end
+require 'mongo_migration'
 
-  class IrreversibleMigration < MongoidError#:nodoc:
+module Mongo
+  class MongoError < StandardError; end
+
+  class IrreversibleMigration < MongoError#:nodoc:
   end
 
-  class DuplicateMigrationVersionError < MongoidError#:nodoc:
+  class DuplicateMigrationVersionError < MongoError#:nodoc:
     def initialize(version)
       super("Multiple migrations have the version number #{version}")
     end
   end
 
-  class DuplicateMigrationNameError < MongoidError#:nodoc:
+  class DuplicateMigrationNameError < MongoError#:nodoc:
     def initialize(name)
       super("Multiple migrations have the name #{name}")
     end
   end
 
-  class UnknownMigrationVersionError < MongoidError #:nodoc:
+  class UnknownMigrationVersionError < MongoError #:nodoc:
     def initialize(version)
       super("No migration with version number #{version}")
     end
   end
 
-  class IllegalMigrationNameError < MongoidError#:nodoc:
+  class IllegalMigrationNameError < MongoError#:nodoc:
     def initialize(name)
       super("Illegal name for migration file: #{name}\n\t(only lower case letters, numbers, and '_' allowed)")
     end
@@ -31,17 +33,17 @@ module Mongoid
   class MigrationProxy
     attr_accessor :name, :version, :filename
 
-    delegate :migrate, :announce, :write, :to=>:migration
+    delegate :migrate, :announce, :write, :to => :migration
 
     private
 
-      def migration
-        @migration ||= load_migration
-      end
+    def migration
+      @migration ||= load_migration
+    end
 
-      def load_migration
-        load(filename)
-        name.constantize
-      end
+    def load_migration
+      load(filename)
+      name.constantize
+    end
   end
 end

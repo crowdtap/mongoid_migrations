@@ -1,4 +1,4 @@
-module Mongoid
+module Mongo
   class Migration
     @@verbose = true
     cattr_accessor :verbose
@@ -81,7 +81,7 @@ module Mongoid
       end
 
       def connection
-        Mongoid.database
+        Mongo::Connection.new
       end
 
       def method_missing(method, *arguments, &block)
