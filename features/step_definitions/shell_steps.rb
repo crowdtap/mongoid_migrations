@@ -16,6 +16,7 @@ Then /^I should not see "([^\"]*)"$/ do |unexpected_text|
 end
 
 Then /^I should see mongo_migration's USAGE$/ do
-  path = File.join(PROJECT_ROOT, 'generators', 'mongo_migration', 'USAGE')
-  @terminal.output.should include(File.read(path))
+  steps %{
+    Then I should see "Usage: ./script/generate mongo_migration MigrationName [options]"
+  }
 end

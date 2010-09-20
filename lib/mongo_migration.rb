@@ -1,4 +1,5 @@
-require 'mongo_migration'
+require 'mongo_migration/migration'
+require 'mongo_migration/migrator'
 
 module Mongo
   class MongoError < StandardError; end
