@@ -1,8 +1,10 @@
 module MongoHelpers
-  def drop_collections
+  def db
     connection = Mongo::Connection.new
-    db = connection.db("mongo_migration_db")
+    connection.db("mongo_migration_db")
+  end
 
+  def drop_collections
     db.collection_names.each do |collection|
       db.drop_collection(collection)
     end

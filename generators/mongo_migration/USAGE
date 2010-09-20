@@ -1,17 +1,19 @@
-Usage: ./script/generate mongoid_migration MigrationName [options]
+Usage: ./script/generate mongo_migration MigrationName [options]
 
 Description:
-    Stubs out a new Mongoid migration. Pass the migration name, either
+
+    Scaffolds a Mongo migration. Pass the migration name, either
     CamelCased or under_scored, and an optional list of attribute pairs as arguments.
 
-    A migration class is generated in db/mongoid_migrate prefixed by a timestamp of the current date and time.
+    A migration class is generated in db/mongo_migrate prefixed by a timestamp of the current date and time.
 
     You can name your migration in either of these formats to generate add/remove
     column lines from supplied attributes: AddColumnsToTable or RemoveColumnsFromTable
 
 Example:
-    `./script/generate mongoid_migration AddSslFlag`
+
+    `./script/generate mongo_migration AddSslFlag`
 
     If the current date is May 14, 2008 and the current time 09:09:12, this creates the AddSslFlag migration
-    db/mongoid_migrate/20080514090912_add_ssl_flag.rb
+    db/mongo_migrate/20080514090912_add_ssl_flag.rb
 

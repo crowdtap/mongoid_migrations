@@ -8,6 +8,6 @@ Gem::Specification.new do |s|
   s.description   = "Mongo Migrations in Rails"
   s.has_rdoc      = false
   s.authors       = ["Galin Yordanov"]
-  s.files         = Dir.glob("{generators,lib,tasks}/**/*") + %w(init.rb README.txt)
+  s.files         = Dir.glob("{generators,lib,tasks,rails}/**/*") + %w(README.txt)
   s.require_paths = ["lib"]
 end

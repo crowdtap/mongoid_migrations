@@ -10,7 +10,7 @@ module Mongo
       end
 
       def rollback(migrations_path, steps=1)
-        migrator = self.new(:down, migrations_path)
+        migrator    = self.new(:down, migrations_path)
         start_index = migrator.migrations.index(migrator.current_migration)
 
         return unless start_index
@@ -32,7 +32,7 @@ module Mongo
       end
 
       def get_all_versions
-        Mongoid.database["migrations"].find.map{|r| r['version'].to_i}.sort
+        Mongo::Connection.new.db("migrations").find.map{ |r| r['version'].to_i }.sort
       end
 
       def current_version
@@ -63,7 +63,7 @@ module Mongo
 
     def migrate
       current = migrations.detect { |m| m.version == current_version }
-      target = migrations.detect { |m| m.version == @target_version }
+      target  = migrations.detect { |m| m.version == @target_version }
 
       if target.nil? && !@target_version.nil? && @target_version > 0
         raise UnknownMigrationVersionError.new(@target_version)

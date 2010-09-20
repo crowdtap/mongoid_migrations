@@ -61,5 +61,5 @@ namespace :mongo do
   end
 
   desc 'Migrate the database and initialize with the seed data'
-  task :setup => [ 'mongo:migrate', 'db:seed' ]
+  task :setup => ['mongo:migrate', 'db:seed']
 end

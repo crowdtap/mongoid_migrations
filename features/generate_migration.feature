@@ -8,14 +8,14 @@ Feature: Migration Generation
 
   Scenario: Display usage screen
     When I run the mongo migration generator with ""
-    And I should see the usage help
+    And I should see mongo_migration's USAGE
 
   Scenario: Generate a migration
-    When I run the mongo migration generator with "test_migration"
+    When I run "bundle exec script/generate mongo_migration test_migration"
     Then I should have a new migration file
-    And the migration should have proper content
+    And the generated migration should contain "TestMigration"
 
   Scenario: Generate a migration with the same name
-    When I run the mongo migration generator with "test_migration"
-    And I run the mongo migration generator with "test_migration"
-    Then I should see a message that the migration already exists
+    When I run "bundle exec script/generate mongo_migration test_migration"
+    And  I run "bundle exec script/generate mongo_migration test_migration"
+    Then I should see "Another migration is already named test_migration"
