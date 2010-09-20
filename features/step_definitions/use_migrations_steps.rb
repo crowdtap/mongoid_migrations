@@ -27,7 +27,7 @@ When /^I run the migrate task$/ do
 end
 
 Then /^I should see "([^\"]*)" in the stdout$/ do |arg1|
-  @std_output.should include(arg1)
+  @terminal.output.should include(arg1)
 end
 
 Then /^I should have the proper collections and records in the database$/ do
@@ -45,7 +45,6 @@ Then /^my database should have 0 pending migrations$/ do
   pending_migrations = Mongoid::Migrator.new(:up, 'db/mongoid_migrate').pending_migrations
   pending_migrations.should be_empty
 end
-
 
 Given /^I have 2 migrated migrations$/ do
   Given "I have 2 pending migrations"

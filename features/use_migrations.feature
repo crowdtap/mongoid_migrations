@@ -1,9 +1,10 @@
 Feature: User Migrations
+
   In order to create a great application
   I should be able to use my migrations
 
   Background:
-    Given I have a new rails app
+    Given I generate a Rails application with mongo migrations
 
   Scenario: Empty Database
     Given I have 2 pending migrations

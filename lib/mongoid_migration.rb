@@ -1,4 +1,3 @@
-# MongoidMigration
 module Mongoid
   class MongoidError < StandardError; end
 
@@ -30,7 +29,6 @@ module Mongoid
   end
 
   class MigrationProxy
-
     attr_accessor :name, :version, :filename
 
     delegate :migrate, :announce, :write, :to=>:migration
@@ -45,10 +43,5 @@ module Mongoid
         load(filename)
         name.constantize
       end
-
   end
-
-
-
-
 end

@@ -1,5 +1,4 @@
 module Mongoid
-
   class Migrator#:nodoc:
     class << self
       def migrate(migrations_path, target_version = nil)
@@ -39,7 +38,6 @@ module Mongoid
       def current_version
         get_all_versions.max || 0
       end
-
     end
 
     def initialize(direction, migrations_path, target_version = nil)
@@ -138,6 +136,7 @@ module Mongoid
     end
 
     private
+
       def record_version_state_after_migrating(version)
         @migrated_versions ||= []
         if down?
