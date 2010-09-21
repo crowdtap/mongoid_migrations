@@ -1,60 +1,17 @@
 module Mongo
   class Migrator#:nodoc:
-    class << self
-      def migrate(migrations_path, target_version = nil)
-        case
-          when target_version.nil?              then up(migrations_path, target_version)
-          when current_version > target_version then down(migrations_path, target_version)
-          else                                       up(migrations_path, target_version)
-        end
-      end
-
-      def rollback(migrations_path, steps=1)
-        migrator    = self.new(:down, migrations_path)
-        start_index = migrator.migrations.index(migrator.current_migration)
-
-        return unless start_index
-
-        finish = migrator.migrations[start_index + steps]
-        down(migrations_path, finish ? finish.version : 0)
-      end
-
-      def up(migrations_path, target_version = nil)
-        self.new(:up, migrations_path, target_version).migrate
-      end
-
-      def down(migrations_path, target_version = nil)
-        self.new(:down, migrations_path, target_version).migrate
-      end
-
-      def run(direction, migrations_path, target_version)
-        self.new(direction, migrations_path, target_version).run
-      end
-
-      def get_all_versions
-        Mongo::Connection.new.db("migrations").find.map{ |r| r['version'].to_i }.sort
-      end
-
-      def current_version
-        get_all_versions.max || 0
-      end
+    def initialize(options = {})
+      @version = options[:version]
+      @steps   = options[:steps]
     end
 
-    def initialize(direction, migrations_path, target_version = nil)
-      @direction, @migrations_path, @target_version = direction, migrations_path, target_version
-    end
+    def migrate_up
 
-    def current_version
-      migrated.last || 0
-    end
-
-    def current_migration
-      migrations.detect { |m| m.version == current_version }
     end
 
     def run
-      target = migrations.detect { |m| m.version == @target_version }
-      raise UnknownMigrationVersionError.new(@target_version) if target.nil?
+      target = migrations.detect { |m| m.version == @version }
+      raise UnknownMigrationVersionError.new(@version) if target.nil?
       unless (up? && migrated.include?(target.version.to_i)) || (down? && !migrated.include?(target.version.to_i))
         target.migrate(@direction)
         record_version_state_after_migrating(target.version)
@@ -62,19 +19,6 @@ module Mongo
     end
 
     def migrate
-      current = migrations.detect { |m| m.version == current_version }
-      target  = migrations.detect { |m| m.version == @target_version }
-
-      if target.nil? && !@target_version.nil? && @target_version > 0
-        raise UnknownMigrationVersionError.new(@target_version)
-      end
-
-      start = up? ? 0 : (migrations.index(current) || 0)
-      finish = migrations.index(target) || migrations.size - 1
-      runnable = migrations[start..finish]
-      # skip the last migration if we're headed down, but not ALL the way down
-      runnable.pop if down? && !target.nil?
-
       runnable.each do |migration|
         Rails.logger.info "Migrating to #{migration.name} (#{migration.version})"
 
@@ -124,36 +68,6 @@ module Mongo
         migrations = migrations.sort_by(&:version)
         down? ? migrations.reverse : migrations
       end
-    end
-
-    def pending_migrations
-      already_migrated = migrated
-      migrations.reject { |m| already_migrated.include?(m.version.to_i) }
-    end
-
-    def migrated
-      @migrated_versions ||= self.class.get_all_versions
-    end
-
-    private
-
-    def record_version_state_after_migrating(version)
-      @migrated_versions ||= []
-      if down?
-        @migrated_versions.delete(version.to_i)
-        Mongo::Connection.new.db("migrations").remove({:version => version.to_i})
-      else
-        @migrated_versions.push(version.to_i).sort!
-        Mongo::Connection.new.db("migrations").insert({:version => version.to_i})
-      end
-    end
-
-    def up?
-      @direction == :up
-    end
-
-    def down?
-      @direction == :down
     end
   end
 end
