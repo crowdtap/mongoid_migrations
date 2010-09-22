@@ -2,7 +2,6 @@ Given /^I generate a Rails application with mongo migrations$/ do
   steps %{
     When I generate a Rails application
     And I setup my Rails 2.3 app with Bundler
-    And I generate a Gemfile with mongo migration gem
     And I run "bundle install"
     And I install the mongo migration plugin
     And I set up a mongo migration config file

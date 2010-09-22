@@ -1,17 +1,16 @@
 module MongoHelpers
-  def db
-    connection = Mongo::Connection.new
-    connection.db("mongo_migration_db")
-  end
-
   def drop_collections
-    db.collection_names.each do |collection|
-      db.drop_collection(collection)
+    DB.collection_names.each do |collection|
+      DB.drop_collection(collection)
     end
   end
 
-  def first_migration
-    Dir[File.join(RAILS_ROOT, 'db', 'mongo_migrate', '*')].first
+  def migration_filenames
+    Dir[File.join(RAILS_ROOT, 'db', 'mongo_migrate', '*.rb')]
+  end
+
+  def last_migration_filename
+    migration_filenames.last
   end
 end
 

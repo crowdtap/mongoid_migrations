@@ -6,6 +6,7 @@ require 'mongo'
 PROJECT_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..', '..')).freeze
 TEMP_DIR     = File.join(PROJECT_ROOT, 'tmp').freeze
 RAILS_ROOT   = File.join(TEMP_DIR, 'rails_root').freeze
+DB           = Mongo::Connection.new.db('mongo_migration_db')
 
 Before do
   FileUtils.rm_rf(TEMP_DIR)
