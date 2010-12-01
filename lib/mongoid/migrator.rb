@@ -116,7 +116,7 @@ module Mongoid
             raise DuplicateMigrationNameError.new(name.camelize)
           end
 
-          klasses << returning(MigrationProxy.new) do |migration|
+          klasses << MigrationProxy.new.tap do |migration|
             migration.name     = name.camelize
             migration.version  = version
             migration.filename = file
