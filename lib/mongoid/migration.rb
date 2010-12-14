@@ -85,6 +85,20 @@ module Mongoid
         Mongoid.database
       end
 
+      def rename_collection(old_name, new_name)
+        connection.collection(old_name).rename(new_name)
+      end
+
+      def rename_column(collection_name, old_name, new_name)
+        collection = connection.collection(collection_name)
+        collection.find({ old_name => { '$exists' => true } },
+                                        :fields => { '_id' => 1, old_name => 1 }).each do |item|
+          collection.update({ '_id' => item['_id'] },
+                            { '$set'   => { new_name => item[old_name] } ,
+                              '$unset' => { old_name => true } })
+        end
+      end
+
       def method_missing(method, *arguments, &block)
         arg_list = arguments.map(&:inspect) * ', '
 
