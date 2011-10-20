@@ -65,8 +65,7 @@ namespace :mongoid do
   task :snapshot => :environment do
     `mkdir -p #{Rails.root}/db/snapshot`
     %w(system.indexes migrations).each do |collection|
-      command = "mongodump -h #{Mongoid.database.connection.host} --port #{Mongoid.database.connection.port} -d #{Mongoid.database.name} -c #{collection} -o - > #{Rails.root}/db/snapshot/#{collection}.bson"
-      puts command
+      `mongodump -h #{Mongoid.database.connection.host} --port #{Mongoid.database.connection.port} -d #{Mongoid.database.name} -c #{collection} -o - > #{Rails.root}/db/snapshot/#{collection}.bson`
     end
   end
 
