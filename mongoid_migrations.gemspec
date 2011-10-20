@@ -10,7 +10,8 @@ Gem::Specification.new do |s|
   s.authors  = ["Galin Yordanov"]
   s.files    = [
    "features/generate_migration.feature",
-   "features/step_definitions/generate_migration.rb",
+   "features/step_definitions/generate_migration_steps.rb",
+   "features/step_definitions/use_migrations_steps.rb",
    "features/support/env.rb",
    "features/use_migrations.feature",
    "generators/mongoid_migration/mongoid_migration_generator.rb",
